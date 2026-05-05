@@ -67,3 +67,27 @@ node_modules/
 
 # dataconnect generated files
 .dataconnect
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.pyc
+
+# Django
+db.sqlite3
+*.sqlite3
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Media uploads (user-generated, not for git)
+media/
+
+# Testing
+.pytest_cache/
+
