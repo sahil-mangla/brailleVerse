@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}User Type - Braille Display{% endblock %}
+
+{% block content %}
+<div class="panel-container two-panels">
+    {% for option in options %}
+    <a href="{{ option.url }}" class="panel" role="button" aria-label="{{ option.text }}" tabindex="0">
+        <div class="panel-icon" aria-hidden="true">
+            {% if "Fully" in option.text %}<i class="fa-solid fa-glasses"></i>{% else %}<i class="fa-solid fa-eye-low-vision"></i>{% endif %}
+        </div>
+        <div class="panel-title">{{ option.text }}</div>
+        <div class="panel-description">Select if you are {{ option.text|lower }} visually impaired</div>
+    </a>
+    {% endfor %}
+</div>
+
+<div class="sr-only" role="status" aria-live="polite">
+    Available options: 1. {{ options.0.text }}, 2. {{ options.1.text }}
+</div>
+{% endblock %}

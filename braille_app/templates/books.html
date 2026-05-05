@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Books - Braille Display{% endblock %}
+
+{% block content %}
+<div class="form-panel" style="margin-bottom: 2rem;">
+    <h1 class="form-title"><i class="fa-solid fa-book" style="margin-right: 15px;"></i>BOOKS LIBRARY</h1>
+    
+    <form method="GET" action="{% url 'books' %}">
+        <div class="form-group">
+            <label for="search" class="form-label">Search for Books:</label>
+            <div style="display: flex; gap: 1rem;">
+                <input 
+                    type="text" 
+                    id="search" 
+                    name="search" 
+                    value="{{ search_query }}"
+                    placeholder="Title or author..."
+                    class="form-input"
+                    aria-label="Search for books">
+                <button type="submit" class="form-button" style="width: auto; padding: 0 2rem;"><i class="fa-solid fa-magnifying-glass" style="margin-right: 10px;"></i>SEARCH</button>
+            </div>
+        </div>
+    </form>
+
+    {% if search_performed %}
+    <div style="margin-top: 1rem; color: var(--accent-primary);">
+        <p role="status" aria-live="polite">
+            {% if books %}
+                Found {{ books|length }} result{{ books|length|pluralize }} for "{{ search_query }}"
+            {% else %}
+                No books found for "{{ search_query }}".
+            {% endif %}
+        </p>
+    </div>
+    {% endif %}
+</div>
+
+<div class="panel-container three-panels" style="padding-top: 0;">
+    {% for book in books %}
+    <a href="{% url 'book_reader' book.id %}" class="panel" role="button" aria-label="Read {{ book.title }} by {{ book.author }}">
+        <div class="panel-icon" aria-hidden="true"><i class="fa-solid fa-book-open"></i></div>
+        <div class="panel-title">{{ book.title }}</div>
+        <div class="panel-description">by {{ book.author }}</div>
+        {% if book.description %}
+        <div style="font-size: 0.9rem; opacity: 0.7; margin-top: 0.5rem;">{{ book.description|truncatewords:15 }}</div>
+        {% endif %}
+    </a>
+    {% endfor %}
+</div>
+
+<!-- Back Button -->
+<a href="{{ back_option.url }}" class="back-button" role="button" aria-label="Go back">BACK</a>
+
+<div class="sr-only" role="status" aria-live="polite">
+    {{ books|length }} books available.
+</div>
+{% endblock %}

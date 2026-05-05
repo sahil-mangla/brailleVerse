@@ -1,0 +1,404 @@
+/* 
+   Braille Display Website - "UI-UX-Pro Max" Design System
+   Focus: High-End Accessibility, Professional Aesthetics, Professional Themes
+   Typography: Atkinson Hyperlegible (functional), Visual Braille (decorative)
+*/
+
+:root {
+    /* Transitions & Blurs */
+    --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    --glass-blur: 24px;
+    --border-radius: 20px;
+
+    /* Dark Theme (Professional Midnight) */
+    --bg-main: #0a0c10;
+    --bg-surface: rgba(18, 22, 28, 0.5);
+    --bg-glass: rgba(18, 22, 28, 0.2);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --accent-primary: #00e5ff; /* Neon Cyan */
+    --accent-secondary: #7b1fa2; /* Deep Purple */
+    --accent-glow: rgba(0, 229, 255, 0.3);
+    --panel-border: rgba(255, 255, 255, 0.05);
+    --panel-border-hover: rgba(0, 229, 255, 0.5);
+    --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+}
+
+[data-theme="light"] {
+    /* Light Theme (Professional Clean) */
+    --bg-main: #f8f9fa;
+    --bg-surface: rgba(255, 255, 255, 0.6);
+    --bg-glass: rgba(255, 255, 255, 0.3);
+    --text-primary: #121212;
+    --text-secondary: rgba(18, 18, 18, 0.7);
+    --accent-primary: #008ba3; /* Deep Cyan */
+    --accent-secondary: #4a148c; /* Indigo */
+    --accent-glow: rgba(0, 139, 163, 0.2);
+    --panel-border: rgba(0, 0, 0, 0.05);
+    --panel-border-hover: rgba(0, 139, 163, 0.4);
+    --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+}
+
+/* ===== RESET & BASE ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background-color var(--transition-slow), color var(--transition-slow);
+    background-image: 
+        radial-gradient(circle at 10% 20%, var(--bg-surface) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, var(--bg-surface) 0%, transparent 40%);
+    background-attachment: fixed;
+}
+
+
+
+/* ===== THEME TOGGLE ===== */
+.theme-toggle {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--bg-surface);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1.5px solid var(--accent-primary);
+    color: var(--text-primary);
+    cursor: pointer;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: all var(--transition-fast);
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1) rotate(15deg);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.theme-toggle::before { 
+    content: '\f186'; 
+    font-family: 'Font Awesome 6 Free'; 
+    font-weight: 900; 
+}
+[data-theme="light"] .theme-toggle::before { 
+    content: '\f185'; 
+}
+
+/* ===== VOICE INDICATOR ===== */
+.voice-indicator {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--bg-glass);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--panel-border);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+    transition: all var(--transition-fast);
+}
+
+.voice-indicator::after {
+    content: '\f130';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 1.3rem;
+    transition: all var(--transition-fast);
+}
+
+.voice-indicator.listening {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 25px var(--accent-glow);
+    animation: glow-pulse 2s infinite;
+}
+
+@keyframes glow-pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 15px var(--accent-glow); }
+    50% { transform: scale(1.1); box-shadow: 0 0 30px var(--accent-glow); }
+}
+
+/* ===== LAYOUT SYSTEM ===== */
+.panel-container {
+    display: flex;
+    width: 100%;
+    padding: 8rem 2rem 4rem;
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.panel-container.two-panels {
+    flex-direction: row;
+}
+
+/* Panel Styling (The Glass Cards) */
+.panel {
+    position: relative;
+    flex: 1;
+    background: var(--bg-glass);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--panel-border);
+    border-radius: var(--border-radius);
+    padding: 4rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+/* Hover Effects */
+.panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, transparent, var(--accent-glow), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.panel:hover {
+    transform: translateY(-10px);
+    border-color: var(--panel-border-hover);
+    background: var(--bg-surface);
+}
+
+.panel:hover::before {
+    transform: translateX(100%);
+}
+
+.panel:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 4px var(--accent-glow);
+}
+
+.panel-icon {
+    font-size: 5rem;
+    margin-bottom: 2rem;
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));
+    transition: transform var(--transition-fast);
+}
+
+.panel:hover .panel-icon {
+    transform: scale(1.2);
+}
+
+.panel-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent-primary);
+}
+
+.panel-description {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 80%;
+}
+
+/* ===== FORMS & INPUTS ===== */
+.form-panel {
+    max-width: 900px;
+    margin: 8rem auto;
+    background: var(--bg-glass);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--panel-border);
+    border-radius: var(--border-radius);
+    padding: 4rem;
+    box-shadow: var(--shadow);
+}
+
+.form-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    text-align: center;
+    background: linear-gradient(to right, var(--text-primary), var(--accent-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.form-group {
+    margin-bottom: 2.5rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.form-input, .form-textarea, .form-file {
+    width: 100%;
+    padding: 1.2rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 1.2rem;
+    transition: all var(--transition-fast);
+}
+
+[data-theme="light"] .form-input, 
+[data-theme="light"] .form-textarea, 
+[data-theme="light"] .form-file {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.form-input:focus, .form-textarea:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.form-button {
+    width: 100%;
+    padding: 1.2rem;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.form-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--accent-glow);
+    filter: brightness(1.1);
+}
+
+/* ===== BACK BUTTON ===== */
+.back-button {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    padding: 1rem 2rem;
+    background: var(--bg-glass);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow);
+    z-index: 1000;
+}
+
+.back-button:hover {
+    background: var(--bg-surface);
+    border-color: var(--accent-primary);
+    transform: translateX(5px);
+}
+
+.back-button::before {
+    content: '←';
+    font-size: 1.4rem;
+    margin-right: 0.5rem;
+}
+
+/* ===== RESULTS DISPLAY ===== */
+.result-display {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-top: 2rem;
+    border: 1px solid var(--panel-border);
+}
+
+.braille-output {
+    font-family: 'Visual Braille', sans-serif;
+    font-size: 2.5rem;
+    color: var(--accent-primary);
+    margin: 1.5rem 0;
+    line-height: 1.4;
+    word-break: break-all;
+}
+
+/* ===== ACCESSIBILITY ===== */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .panel-container {
+        padding: 6rem 1rem 1rem;
+        flex-direction: column !important;
+    }
+    .panel {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 250px;
+    }
+    .form-panel {
+        margin: 6rem 1rem;
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    body { font-size: 1.1rem; }
+    .form-title { font-size: 2.2rem; }
+    .panel-title { font-size: 1.8rem; }
+    .panel-icon { font-size: 4rem; }
+    .back-button, .theme-toggle, .voice-indicator {
+        transform: scale(0.9);
+    }
+}

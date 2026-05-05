@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Main Menu - Braille Display{% endblock %}
+
+{% block content %}
+<div class="panel-container four-panels">
+    {% for option in options %}
+    <a href="{{ option.url }}" class="panel" role="button" aria-label="{{ option.text }}" tabindex="0">
+        <div class="panel-icon" aria-hidden="true">
+            {% if "Text" in option.text %}<i class="fa-solid fa-keyboard"></i>
+            {% elif "Assistant" in option.text %}<i class="fa-solid fa-robot"></i>
+            {% elif "News" in option.text %}<i class="fa-solid fa-newspaper"></i>
+            {% elif "Books" in option.text %}<i class="fa-solid fa-book-open"></i>
+            {% else %}<i class="fa-solid fa-circle-dot"></i>{% endif %}
+        </div>
+        <div class="panel-title">{{ option.text }}</div>
+        <div class="panel-description">Navigate to {{ option.text|lower }}</div>
+    </a>
+    {% endfor %}
+</div>
+
+<!-- Back Button -->
+<a href="{% url 'landing' %}" class="back-button" role="button" aria-label="Go back to home">BACK</a>
+
+<div class="sr-only" role="status" aria-live="polite">
+    Main menu options: 
+    {% for option in options %}
+        {{ forloop.counter }}. {{ option.text }}{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

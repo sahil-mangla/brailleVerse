@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}News - Braille Display{% endblock %}
+
+{% block content %}
+<div class="panel-container three-panels">
+    {% for category in categories %}
+    <a href="{{ category.url }}" class="panel" role="button" aria-label="{{ category.text }}" tabindex="0">
+        <div class="panel-icon" aria-hidden="true">
+            {% if category.id == 'headlines' %}<i class="fa-solid fa-newspaper"></i>
+            {% elif category.id == 'technology' %}<i class="fa-solid fa-microchip"></i>
+            {% elif category.id == 'sports' %}<i class="fa-solid fa-futbol"></i>
+            {% else %}<i class="fa-solid fa-globe"></i>{% endif %}
+        </div>
+        <div class="panel-title">{{ category.text }}</div>
+        <div class="panel-description">Read {{ category.text|lower }} updates</div>
+    </a>
+    {% endfor %}
+</div>
+
+<!-- Back Button -->
+<a href="{% url 'main_menu' %}" class="back-button" role="button" aria-label="Go back to menu">BACK</a>
+
+<div class="sr-only" role="status" aria-live="polite">
+    News categories: 
+    {% for category in categories %}
+        {{ forloop.counter }}. {{ category.text }}{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

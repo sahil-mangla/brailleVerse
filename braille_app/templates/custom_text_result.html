@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Text Sent - Braille Display{% endblock %}
+
+{% block content %}
+<div class="form-panel" style="text-align: center;">
+    <div class="panel-icon" style="font-size: 6rem; margin-bottom: 2rem;">
+        {% if success %}<i class="fa-solid fa-circle-check" style="color: #4caf50;"></i>{% else %}<i class="fa-solid fa-circle-xmark" style="color: #f44336;"></i>{% endif %}
+    </div>
+    
+    <h1 class="form-title">
+        {% if success %}TEXT SENT{% else %}ERROR{% endif %}
+    </h1>
+
+    <div style="margin-bottom: 3rem;">
+        <p style="font-size: 1.5rem; color: var(--text-primary); margin-bottom: 1rem;">{{ feedback }}</p>
+        <p style="font-size: 1.2rem; color: var(--text-secondary);">{{ message }}</p>
+    </div>
+    
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <a href="{% url 'custom_text' %}" class="form-button" style="text-decoration: none; display: block;">
+            SEND ANOTHER MESSAGE
+        </a>
+        
+        <a href="{% url 'main_menu' %}" class="form-button" style="text-decoration: none; display: block; background: var(--bg-surface); border: 1px solid var(--panel-border);">
+            BACK TO MAIN MENU
+        </a>
+    </div>
+</div>
+
+
+{% endblock %}

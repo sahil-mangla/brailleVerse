@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Voice Assistant - Braille Display{% endblock %}
+
+{% block content %}
+<div class="form-panel">
+    <h1 class="form-title"><i class="fa-solid fa-robot" style="margin-right: 15px;"></i>VOICE ASSISTANT</h1>
+    
+    <form method="post" action="{% url 'voice_assistant' %}" id="assistant-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="question-input" class="form-label">
+                Your Question:
+            </label>
+            <textarea 
+                id="question-input" 
+                name="question" 
+                class="form-textarea"
+                required
+                aria-required="true"
+                placeholder="Ask me anything..."></textarea>
+            <p style="font-size: 1rem; margin-top: 1rem; opacity: 0.7;">
+                The answer will be spoken and sent to your braille device.
+            </p>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <button type="button" id="voice-text-button" class="form-button" style="background: var(--bg-surface); border: 1px solid var(--accent-primary);">
+                <i class="fa-solid fa-microphone" style="margin-right: 10px;"></i>ASK USING VOICE
+            </button>
+            
+            <button type="submit" class="form-button">
+                <i class="fa-solid fa-comment-dots" style="margin-right: 10px;"></i>GET ANSWER
+            </button>
+        </div>
+    </form>
+
+    <div style="margin-top: 3rem; padding: 2rem; background: var(--bg-surface); border-radius: 12px; border: 1px solid var(--panel-border);">
+        <h2 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--accent-primary);">Example Questions:</h2>
+        <ul style="font-size: 1.1rem; line-height: 1.8; list-style: none;">
+            <li>• What is artificial intelligence?</li>
+            <li>• Tell me about braille</li>
+            <li>• What can you help me with?</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Back Button -->
+<a href="{% url 'main_menu' %}" class="back-button" role="button" aria-label="Go back to menu">BACK</a>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.getElementById('assistant-form').addEventListener('submit', function(e) {
+        const questionInput = document.getElementById('question-input');
+        if (!questionInput.value.trim()) {
+            e.preventDefault();
+            if (window.voiceNav) {
+                window.voiceNav.speak('Please ask a question first.');
+            }
+        }
+    });
+</script>
+{% endblock %}

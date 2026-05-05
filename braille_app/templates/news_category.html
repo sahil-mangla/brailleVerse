@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category }} News - Braille Display{% endblock %}
+
+{% block content %}
+<div class="form-panel" style="max-width: 1100px;">
+    <h1 class="form-title"><i class="fa-solid fa-newspaper" style="margin-right: 15px;"></i>{{ category }} NEWS</h1>
+    
+    <div class="article-list">
+        {% for article in articles %}
+        <div class="panel" style="margin-bottom: 2rem; align-items: flex-start; text-align: left; padding: 2.5rem; cursor: default;">
+            <h2 class="panel-title" style="font-size: 1.8rem; margin-bottom: 1rem;">{{ article.title }}</h2>
+            <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 2rem;">{{ article.content }}</p>
+            
+            <form method="post" class="send-article-form" style="width: 100%;">
+                {% csrf_token %}
+                <input type="hidden" name="article_text" value="{{ article.title }}. {{ article.content }}">
+                <button type="submit" class="form-button" style="padding: 0.8rem 1.5rem; font-size: 1.1rem;">
+                    <i class="fa-solid fa-paper-plane" style="margin-right: 10px;"></i>SEND TO BRAILLE DEVICE
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Back Button -->
+<a href="{% url 'news' %}" class="back-button" role="button" aria-label="Back to news categories">BACK</a>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.querySelectorAll('.send-article-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            if (window.voiceNav) {
+                window.voiceNav.speak('Sending article to your braille device...');
+            }
+            
+            fetch('', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': formData.get('csrfmiddlewaretoken') },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    if (window.voiceNav) window.voiceNav.speak('Article sent successfully.');
+                } else {
+                    if (window.voiceNav) window.voiceNav.speak('Error sending article.');
+                }
+            })
+            .catch(error => {
+                if (window.voiceNav) window.voiceNav.speak('Connection error.');
+            });
+        });
+    });
+</script>
+{% endblock %}

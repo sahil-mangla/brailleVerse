@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}{{ book_title }} - Braille Display{% endblock %}
+
+{% block content %}
+<div class="form-panel" style="max-width: 1100px;">
+    <h1 class="form-title"><i class="fa-solid fa-book-open-reader" style="margin-right: 15px;"></i>{{ book_title }}</h1>
+    <h2 style="text-align: center; font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-primary);">
+        Chapter {{ chapter.number }}: {{ chapter.title }}
+    </h2>
+    <p style="text-align: center; font-size: 1rem; opacity: 0.7; margin-bottom: 2rem;">
+        {{ chapter.number }} of {{ total_chapters }}
+    </p>
+
+    <div class="panel" style="margin-bottom: 2rem; align-items: flex-start; text-align: left; padding: 3rem; cursor: default; background: var(--bg-surface);">
+        <div class="chapter-content" style="font-size: 1.2rem; line-height: 1.8; color: var(--text-primary);">
+            {{ chapter.content }}
+        </div>
+    </div>
+    
+    <form method="post" id="send-chapter-form" style="margin-bottom: 2rem;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="send_to_braille">
+        <button type="submit" class="form-button">
+            <i class="fa-solid fa-paper-plane" style="margin-right: 10px;"></i>SEND CHAPTER TO BRAILLE DEVICE
+        </button>
+    </form>
+    
+    <div style="display: flex; gap: 1rem; width: 100%;">
+        {% if has_previous %}
+        <form method="post" style="flex: 1;">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="previous">
+            <button type="submit" class="form-button" style="background: var(--bg-surface); border: 1px solid var(--panel-border);">
+                <i class="fa-solid fa-chevron-left" style="margin-right: 5px;"></i>PREVIOUS
+            </button>
+        </form>
+        {% endif %}
+        
+        {% if has_next %}
+        <form method="post" style="flex: 1;">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="next">
+            <button type="submit" class="form-button" style="background: var(--bg-surface); border: 1px solid var(--panel-border);">
+                NEXT<i class="fa-solid fa-chevron-right" style="margin-left: 5px;"></i>
+            </button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Back Button -->
+<a href="{% url 'books' %}" class="back-button" role="button" aria-label="Back to library">BACK</a>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.getElementById('send-chapter-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        if (window.voiceNav) window.voiceNav.speak('Sending chapter to your braille device...');
+        
+        fetch('', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': formData.get('csrfmiddlewaretoken') },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                if (window.voiceNav) window.voiceNav.speak('Chapter sent successfully.');
+            } else {
+                if (window.voiceNav) window.voiceNav.speak('Error sending chapter.');
+            }
+        })
+        .catch(error => {
+            if (window.voiceNav) window.voiceNav.speak('Connection error.');
+        });
+    });
+</script>
+{% endblock %}
