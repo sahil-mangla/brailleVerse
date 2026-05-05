@@ -3,20 +3,14 @@
 # Core Django
 Django>=5.0.0
 
-# Firebase Admin SDK for Realtime Database integration
-firebase-admin>=6.4.0
+# Firebase Realtime Database (lightweight REST client, not the heavy Admin SDK)
+requests>=2.31.0
 
 # News API for real-time news
 newsapi-python>=0.2.7
 
-# Google Books API
-google-api-python-client>=2.108.0
-
-# Google Gemini AI
-google-genai>=0.1.0
-
-# HTTP requests for API calls
-requests>=2.31.0
+# Google Gemini AI (pinned to 1.x for the new Client API)
+google-genai>=1.0.0
 
 # PDF text extraction
 PyPDF2>=3.0.0
@@ -24,11 +18,8 @@ PyPDF2>=3.0.0
 # Image processing
 Pillow>=10.0.0
 
-# Optional: For production deployment
+# Production deployment
 gunicorn>=21.2.0
 whitenoise>=6.6.0
 psycopg2-binary>=2.9.9
 dj-database-url>=2.1.0
-
-# Optional: For development
-django-debug-toolbar>=4.2.0
